@@ -35,6 +35,9 @@ public class DBToken {
 		time = LocalDateTime.now();
 	}
 
+	public DBToken() {
+	}
+
 	public String getToken() {
 		return token;
 	}

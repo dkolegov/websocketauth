@@ -51,6 +51,7 @@ public class AuthenticationBean {
 				if (note.hasErrors()) {
 					result = new AuthResponse(
 							Type.CUSTOMER_ERROR,
+							Utils.getNextUUID(request.getSequence_id()).toString(),
 							note.getErrorTypes(),
 							note.getErrorDescriptions());
 				} else {
@@ -59,6 +60,7 @@ public class AuthenticationBean {
 					if (dbuser == null) {
 						result = new AuthResponse(
 								Type.CUSTOMER_ERROR,
+								Utils.getNextUUID(request.getSequence_id()).toString(),
 								MessageTypes.customerNotFound,
 								messageSource.getMessage(
 					    				MessageTypes.customerNotFound,
@@ -85,6 +87,7 @@ public class AuthenticationBean {
 						} else {
 							result = new AuthResponse(
 								Type.CUSTOMER_ERROR,
+								Utils.getNextUUID(request.getSequence_id()).toString(),
 								MessageTypes.customerNotFound,
 								messageSource.getMessage(
 					    				MessageTypes.customerNotFound,
@@ -98,6 +101,7 @@ public class AuthenticationBean {
 			default:
 				result = new AuthResponse(
 						Type.CUSTOMER_ERROR,
+						Utils.getNextUUID(request.getSequence_id()).toString(),
 						MessageTypes.requestTypeUndefined,
 						messageSource.getMessage(
 			    				MessageTypes.requestTypeUndefined,

@@ -21,8 +21,9 @@ public class AuthResponse {
 
 	public AuthResponse() {}
 	
-	public AuthResponse(String type, String errorType, String errorDescription) {
+	public AuthResponse(String type, String sequence_id, String errorType, String errorDescription) {
 		this.type = type;
+		this.sequence_id = sequence_id;
 		this.data = new AuthResponseData(errorDescription, errorType);
 	}
 
