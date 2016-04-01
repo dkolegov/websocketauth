@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello WebSocket</title>
+    <script src="sockjs-0.3.4.js"></script>
+    <script src="stomp.js"></script>
+    <script type="text/javascript">
+        var stompClient = null;
+        
+        var isConnected = false;
+        var subscription = null;
+        var loginName = null;
+        function connect(name, callback) {
+        	if (!name) {
+        		name = 'undefinedUser';
+        	}
+        	if (!isConnected) {
+        		loginName = name;
+	            var socket = new SockJS('/auth');
+	            stompClient = Stomp.over(socket);
+	            stompClient.connect({}, function(frame) {
+	            	isConnected = true;
+	                console.log('Connected: ' + frame);
+	                subscription = stompClient.subscribe('/response/auth/'+name, function(response){
+	                	showResponse(response.body);
+	                });
+	                callback();
+	            });
+        	} else {
+        		if (loginName != name) {
+        			subscription.unsubscribe();
+        			subscription = stompClient.subscribe('/response/auth/'+name, function(response){
+        				showResponse(response.body);
+	                });
+        		}
+        		callback();
+        	}
+        }
+
+        function disconnect() {
+            if (stompClient != null) {
+                stompClient.disconnect();
+            }
+            console.log("Disconnected");
+        }
+
+        function login() {
+            var email = document.getElementById('loginId').value;
+            if (!email) {
+            	name = 'undefinedUser';
+        	} else {
+        		name = email;
+        	}
+            var password = document.getElementById('userPassword').value;
+            connect(email, function() {
+                stompClient.send("/app/auth/"+name, {}, JSON.stringify(
+                		{
+                			'type': 'LOGIN_CUSTOMER',
+                			'sequence_id': guid(),
+                			data: {
+                				'email': email,
+                				'password': password
+                			}
+                		}
+                ));
+            });
+        }
+        
+        function guid() {
+       	  function s4() {
+       	    return Math.floor((1 + Math.random()) * 0x10000)
+       	      .toString(16)
+       	      .substring(1);
+       	  }
+       	  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+       	    s4() + '-' + s4() + s4() + s4();
+       	}
+
+        function showResponse(message) {
+            var response = document.getElementById('response');
+            var p = document.createElement('p');
+            p.style.wordWrap = 'break-word';
+            p.appendChild(document.createTextNode(message));
+            response.appendChild(p);
+        }
+    </script>
+</head>
+<body onload="disconnect()">
+<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being enabled. Please enable
+    Javascript and reload this page!</h2></noscript>
+<div>
+
+    <div id="loginDiv">
+        <label>User email</label><input type="text" id="loginId" />
+        <label>Password</label><input type="password" id="userPassword" />
+        <button id="loginButton" onclick="login();">Send</button>
+        <p id="response"></p>
+    </div>
+</div>
+</body>
+</html>
