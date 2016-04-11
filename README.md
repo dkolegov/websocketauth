@@ -3,7 +3,7 @@
 $ mvn package
 ####2. Command to run the executable jar created on the previous step(with embedded Tomcat):
 $ java -jar target/websocketauth-0.0.1-SNAPSHOT.jar
-####3. After step 2 the application will be accessable by 'localhost:8080'
+####3. After step 2 the application should be accessable by 'localhost:8080'
 ##Preconfiguration
 ####This application configured with predefined users:
 	NAME(email)		PASSWORD
@@ -12,6 +12,7 @@ $ java -jar target/websocketauth-0.0.1-SNAPSHOT.jar
 	dog@gmail.com	qwerty
 	mice@mail.ru	qwerty123
 ##Main technologies used in this project
+####Java 8
 ####Servlet container: Tomcat
 ####DB: H2 (in-memory mode)
 ####Frameworks: Spring Framework(Boot, JPA, MVC, Core, WebSocket)
