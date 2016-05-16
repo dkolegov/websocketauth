@@ -1,11 +1,10 @@
 package com.web.socket.auth.web;
 
-/* this test works only if comment bean createWebSocketContainer in WebSocketConfig
- * for more information see http://stackoverflow.com/questions/29978101/why-is-servletservercontainerfactorybean-casuing-problems-when-testing
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringApplicationConfiguration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.web.socket.auth.WebsocketauthApplication;
@@ -25,6 +24,7 @@ import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = WebsocketauthApplication.class)
+@ActiveProfiles("dev")
 public class AuthenticationTest {
 
     @Autowired
@@ -94,6 +94,4 @@ public class AuthenticationTest {
     	assertNotEquals(response1.getData().getApi_token(), response2.getData().getApi_token());
     }
     
-}*/
-public class AuthenticationTest {
 }
