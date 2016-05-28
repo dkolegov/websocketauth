@@ -2,6 +2,7 @@ package com.web.socket.auth.core.security;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -56,8 +57,8 @@ public class AuthenticationBean {
 							note.getErrorDescriptions());
 				} else {
 					// is user exist
-					DBUser dbuser = userRepository.findByEmail(request.getData().getEmail());
-					if (dbuser == null) {
+					List<DBUser> dbuser = userRepository.findByEmail(request.getData().getEmail());
+					if (dbuser == null || dbuser.isEmpty()) {
 						result = new AuthResponse(
 								Type.CUSTOMER_ERROR,
 								Utils.getNextUUID(request.getSequence_id()).toString(),
@@ -69,9 +70,9 @@ public class AuthenticationBean {
 									));
 					} else {
 						// check password
-						if (Utils.checkHash(dbuser.getPasswordHash(), request.getData().getPassword())) {
+						if (Utils.checkHash(dbuser.get(0).getPasswordHash(), request.getData().getPassword())) {
 							String token = Utils.genUserToken().toString();
-							DBToken dbtoken = new DBToken(token, dbuser);
+							DBToken dbtoken = new DBToken(token, dbuser.get(0));
 							tokenRepository.save(dbtoken);
 							log.info("tokens count: " + tokenRepository.count());
 							log.info("maxSessionIdleTimeout: " + maxSessionIdleTimeout);
